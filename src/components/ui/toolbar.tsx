@@ -12,7 +12,7 @@ import { Search } from 'lucide-react';
 
 export default function Toolbar() {
 	return (
-		<div className="flex justify-center items-centers gap-6">
+		<div className="flex justify-center items-centers gap-3">
 			<Select>
 				<SelectTrigger>
 					<SelectValue placeholder="Select Search" />
