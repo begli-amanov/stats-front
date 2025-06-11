@@ -2,8 +2,8 @@ import ChampionsPage from "./champions/page";
 
 export default function Home() {
   return (
-	<main className="flex flex-col flex-1">
+    <main>
       <ChampionsPage />
-	</main>
+    </main>
   );
 }
