@@ -16,7 +16,7 @@ const buttonVariants = cva(
 				outline:
 					'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground',
 				toggle:
-					'border shadow-xs bg-popover hover:bg-accent hover:text-accent-foreground cursor-pointer',
+					'border border-border shadow-xs bg-popover hover:bg-accent hover:text-accent-foreground cursor-pointer',
 				secondary:
 					'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
 				ghost: 'hover:bg-accent hover:text-accent-foreground',

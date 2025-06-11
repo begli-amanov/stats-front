@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className="flex flex-col antialiased">
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
