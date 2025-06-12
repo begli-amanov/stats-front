@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getChampions } from "@/lib/api";
 import type { Champion } from "@/lib/IChampion";
 
 const ChampionCard: React.FC<{ champion: Champion }> = ({ champion }) => (
-  <div className="min-w-[220px] max-w-[220px] bg-white dark:bg-zinc-900 rounded-lg shadow-md m-2 flex flex-col items-center p-4 transition-transform hover:scale-105 cursor-pointer">
+  <div className="min-w-[220px] max-w-[220px] border bg-white dark:bg-zinc-900 rounded-lg shadow-md m-2 flex flex-col items-center p-4 transition-transform hover:scale-105 cursor-pointer">
     <img
       src={champion.defaultSkinImageUrls.square}
       alt={champion.name}
@@ -41,7 +41,6 @@ const ChampionsScroll: React.FC<ChampionsScrollProps> = ({
   );
   const [loading, setLoading] = useState(!initialChampions);
   const [error, setError] = useState<string | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (initialChampions) return;
@@ -56,30 +55,14 @@ const ChampionsScroll: React.FC<ChampionsScrollProps> = ({
       });
   }, [initialChampions]);
 
-  // Enable horizontal scroll with mouse wheel
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      el.scrollBy({ left: e.deltaY, behavior: "smooth" });
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
-
+  // Remove horizontal scroll effect and make cards stack vertically in a grid
   if (loading)
     return <div className="p-8 text-center">Loading champions...</div>;
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
   return (
-    <div
-      className="overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700"
-      ref={scrollRef}
-      style={{ WebkitOverflowScrolling: "touch" }}
-    >
-      <div className="flex flex-row gap-2 py-4 px-2 min-w-fit">
+    <div className="py-4 px-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {champions.map((champion) => (
           <ChampionCard key={champion.id} champion={champion} />
         ))}
