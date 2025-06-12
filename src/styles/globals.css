@@ -73,6 +73,40 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground flex flex-col antialiased min-h-screen;
+
+    /* more robust implementation of vh units */
+    min-height: 100dvh; /* Modern browsers */
   }
 }
+
+/* 
+{
+  "window.zoomLevel": 1,
+  "css.lint.unknownAtRules": "ignore",
+  "editor.wordWrap": "on",
+  "editor.guides.bracketPairs": true,
+  // "editor.guides.bracketPairsHorizontal": true,
+  // "editor.guides.highlightActiveBracketPair": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "workbench.colorTheme": "Community Material Theme Darker High Contrast",
+  "editor.fontFamily": "Roboto Mono, Consolas, 'Courier New', monospace",
+  "workbench.iconTheme": "eq-material-theme-icons-light",
+  "workbench.colorCustomizations": {
+    // "statusBar.background": "#232323",
+    "statusBar.foreground": "#cbcbcb",
+    "sideBar.foreground": "#cbcbcb"
+  },
+  "editor.tokenColorCustomizations": {
+    "[Community Material Theme Darker High Contrast]": {
+      "comments": "#229977"
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "editor.cursorWidth": 4,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "typescript.updateImportsOnFileMove.enabled": "always"
+} */
