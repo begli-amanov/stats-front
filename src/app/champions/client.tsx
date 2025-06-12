@@ -29,13 +29,22 @@ const ChampionCard: React.FC<{ champion: Champion }> = ({ champion }) => (
   </div>
 );
 
-const ChampionsScroll: React.FC = () => {
-  const [champions, setChampions] = useState<Champion[]>([]);
-  const [loading, setLoading] = useState(true);
+interface ChampionsScrollProps {
+  initialChampions?: Champion[];
+}
+
+const ChampionsScroll: React.FC<ChampionsScrollProps> = ({
+  initialChampions,
+}) => {
+  const [champions, setChampions] = useState<Champion[]>(
+    initialChampions || []
+  );
+  const [loading, setLoading] = useState(!initialChampions);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (initialChampions) return;
     getChampions()
       .then((data) => {
         setChampions(data);
@@ -45,7 +54,7 @@ const ChampionsScroll: React.FC = () => {
         setError(err.message || "Failed to load champions");
         setLoading(false);
       });
-  }, []);
+  }, [initialChampions]);
 
   // Enable horizontal scroll with mouse wheel
   useEffect(() => {
