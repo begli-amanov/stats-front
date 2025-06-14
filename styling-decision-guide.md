@@ -31,27 +31,27 @@ Is it simple styling (spacing, colors, basic layout)?
 ```tsx
 // ✅ Perfect for Tailwind
 function QuickCard({ children }) {
-	return (
-		<div className="p-6 bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
-			{children}
-		</div>
-	);
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+      {children}
+    </div>
+  );
 }
 
 // ✅ Layout and spacing
 function PageLayout() {
-	return (
-		<div className="min-h-screen bg-gray-50">
-			<header className="sticky top-0 bg-white shadow-sm border-b px-4 py-3">
-				<nav className="max-w-7xl mx-auto flex items-center justify-between">
-					{/* content */}
-				</nav>
-			</header>
-			<main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-				{/* content */}
-			</main>
-		</div>
-	);
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="sticky top-0 bg-white shadow-sm border-b px-4 py-3">
+        <nav className="max-w-7xl mx-auto flex items-center justify-between">
+          {/* content */}
+        </nav>
+      </header>
+      <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+        {/* content */}
+      </main>
+    </div>
+  );
 }
 ```
 
@@ -80,30 +80,30 @@ function PageLayout() {
 
 ```css
 .card {
-	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover {
-	transform: translateY(-8px) scale(1.02);
+  transform: translateY(-8px) scale(1.02);
 }
 
 .card:hover .image {
-	transform: scale(1.1) rotate(2deg);
+  transform: scale(1.1) rotate(2deg);
 }
 
 @keyframes shimmer {
-	0% {
-		background-position: -200px 0;
-	}
-	100% {
-		background-position: calc(200px + 100%) 0;
-	}
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
 }
 
 .loading {
-	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-	background-size: 200px 100%;
-	animation: shimmer 1.5s infinite;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
 }
 ```
 
@@ -111,42 +111,42 @@ function PageLayout() {
 
 ```css
 .gridContainer {
-	display: grid;
-	grid-template-areas:
-		'sidebar header header'
-		'sidebar main aside'
-		'sidebar footer footer';
-	grid-template-columns: 250px 1fr 300px;
-	grid-template-rows: 60px 1fr 40px;
-	min-height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "sidebar header header"
+    "sidebar main aside"
+    "sidebar footer footer";
+  grid-template-columns: 250px 1fr 300px;
+  grid-template-rows: 60px 1fr 40px;
+  min-height: 100vh;
 }
 
 .sidebar {
-	grid-area: sidebar;
+  grid-area: sidebar;
 }
 .header {
-	grid-area: header;
+  grid-area: header;
 }
 .main {
-	grid-area: main;
+  grid-area: main;
 }
 .aside {
-	grid-area: aside;
+  grid-area: aside;
 }
 .footer {
-	grid-area: footer;
+  grid-area: footer;
 }
 
 @media (max-width: 768px) {
-	.gridContainer {
-		grid-template-areas:
-			'header'
-			'main'
-			'aside'
-			'footer';
-		grid-template-columns: 1fr;
-		grid-template-rows: auto 1fr auto auto;
-	}
+  .gridContainer {
+    grid-template-areas:
+      "header"
+      "main"
+      "aside"
+      "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto auto;
+  }
 }
 ```
 
@@ -174,85 +174,85 @@ function PageLayout() {
 ```tsx
 // lib/variants.ts
 export const buttonVariants = cva(
-	// Base styles (always applied)
-	'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none disabled:opacity-50',
-	{
-		variants: {
-			variant: {
-				default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-				destructive:
-					'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-				outline:
-					'border border-input hover:bg-accent hover:text-accent-foreground',
-				ghost: 'hover:bg-accent hover:text-accent-foreground',
-			},
-			size: {
-				sm: 'h-9 px-3 text-sm',
-				md: 'h-10 px-4 py-2',
-				lg: 'h-11 px-8 text-lg',
-			},
-			fullWidth: {
-				true: 'w-full',
-				false: 'w-auto',
-			},
-		},
-		compoundVariants: [
-			{
-				variant: 'destructive',
-				size: 'lg',
-				class: 'font-bold', // Special styling for large destructive buttons
-			},
-		],
-		defaultVariants: {
-			variant: 'default',
-			size: 'md',
-			fullWidth: false,
-		},
-	}
+  // Base styles (always applied)
+  "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+      },
+      size: {
+        sm: "h-9 px-3 text-sm",
+        md: "h-10 px-4 py-2",
+        lg: "h-11 px-8 text-lg",
+      },
+      fullWidth: {
+        true: "w-full",
+        false: "w-auto",
+      },
+    },
+    compoundVariants: [
+      {
+        variant: "destructive",
+        size: "lg",
+        class: "font-bold", // Special styling for large destructive buttons
+      },
+    ],
+    defaultVariants: {
+      variant: "default",
+      size: "md",
+      fullWidth: false,
+    },
+  }
 );
 
 // components/Button.tsx
 interface ButtonProps
-	extends ButtonHTMLAttributes<HTMLButtonElement>,
-		VariantProps<typeof buttonVariants> {
-	children: React.ReactNode;
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  children: React.ReactNode;
 }
 
 export function Button({
-	variant,
-	size,
-	fullWidth,
-	className,
-	children,
-	...props
+  variant,
+  size,
+  fullWidth,
+  className,
+  children,
+  ...props
 }: ButtonProps) {
-	return (
-		<button
-			className={cn(buttonVariants({ variant, size, fullWidth }), className)}
-			{...props}
-		>
-			{children}
-		</button>
-	);
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size, fullWidth }), className)}
+      {...props}
+    >
+      {children}
+    </button>
+  );
 }
 ```
 
 **Alert Component with CVA:**
 
 ```tsx
-const alertVariants = cva('relative w-full rounded-lg border p-4', {
-	variants: {
-		variant: {
-			default: 'bg-background text-foreground',
-			destructive:
-				'border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive',
-			warning: 'border-yellow-500/50 text-yellow-600 bg-yellow-50',
-			success: 'border-green-500/50 text-green-600 bg-green-50',
-		},
-	},
-	defaultVariants: {
-		variant: 'default',
-	},
+const alertVariants = cva("relative w-full rounded-lg border p-4", {
+  variants: {
+    variant: {
+      default: "bg-background text-foreground",
+      destructive:
+        "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+      warning: "border-yellow-500/50 text-yellow-600 bg-yellow-50",
+      success: "border-green-500/50 text-green-600 bg-green-50",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
 });
 ```
 
@@ -270,33 +270,33 @@ const alertVariants = cva('relative w-full rounded-lg border p-4', {
 
 ```tsx
 function AnimatedCard({ isActive, children }) {
-	return (
-		<div
-			className={cn(
-				// Tailwind for basic styling
-				'p-6 bg-white rounded-lg shadow-sm border',
-				// CSS Modules for complex animations
-				styles.card,
-				isActive && styles.active
-			)}
-		>
-			{children}
-		</div>
-	);
+  return (
+    <div
+      className={cn(
+        // Tailwind for basic styling
+        "p-6 bg-white rounded-lg shadow-sm border",
+        // CSS Modules for complex animations
+        styles.card,
+        isActive && styles.active
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 ```
 
 ### **CVA + CSS Modules (Variants with Complex Animations)**
 
 ```tsx
-const cardVariants = cva('rounded-lg border', {
-	variants: {
-		variant: {
-			default: 'bg-white shadow-sm',
-			elevated: cn('bg-white shadow-lg', styles.elevatedCard), // CSS Module for complex shadow
-			interactive: cn('cursor-pointer', styles.interactiveCard), // CSS Module for hover animations
-		},
-	},
+const cardVariants = cva("rounded-lg border", {
+  variants: {
+    variant: {
+      default: "bg-white shadow-sm",
+      elevated: cn("bg-white shadow-lg", styles.elevatedCard), // CSS Module for complex shadow
+      interactive: cn("cursor-pointer", styles.interactiveCard), // CSS Module for hover animations
+    },
+  },
 });
 ```
 
@@ -304,23 +304,23 @@ const cardVariants = cva('rounded-lg border', {
 
 ```tsx
 function ProductCard({ variant, size, isLoading, className, ...props }) {
-	return (
-		<div
-			className={cn(
-				// CVA for systematic variants
-				cardVariants({ variant, size }),
-				// CSS Modules for complex animations
-				styles.productCard,
-				isLoading && styles.loading,
-				// Tailwind for quick adjustments
-				'hover:shadow-lg transition-shadow',
-				className
-			)}
-			{...props}
-		>
-			{/* content */}
-		</div>
-	);
+  return (
+    <div
+      className={cn(
+        // CVA for systematic variants
+        cardVariants({ variant, size }),
+        // CSS Modules for complex animations
+        styles.productCard,
+        isLoading && styles.loading,
+        // Tailwind for quick adjustments
+        "hover:shadow-lg transition-shadow",
+        className
+      )}
+      {...props}
+    >
+      {/* content */}
+    </div>
+  );
 }
 ```
 
@@ -388,3 +388,137 @@ CVA: Type-safe variants prevent bugs, clear component APIs
 CSS Modules: Isolated scope prevents style conflicts, clear separation of concerns
 
 This approach keeps your stylesheets lean and your components predictable, making both development and debugging much easier.
+
+Examples:
+
+## 1
+
+![alt text](image.png)
+
+```HTML
+  <div className="min-w-[220px] max-w-[220px] border bg-white dark:bg-zinc-900 rounded-lg shadow-md m-2 flex flex-col items-center p-4 transition-transform hover:scale-105 cursor-pointer">
+    {/* image of champions */}
+    <img
+      src={champion.defaultSkinImageUrls.splash}
+      alt={champion.name}
+      className="w-full h-full object-cover overflow-hidden rounded-lg mb-2 border border-border"
+      loading="lazy"
+    />
+    <div className="font-semibold text-lg text-center">
+      {champion.name}
+
+      <div className="text-xs text-zinc-500 text-center mb-1">
+        {champion.title}
+      </div>
+      <div className="flex flex-wrap gap-1 justify-center mt-1">
+        {champion.tags.map((tag) => (
+          <span
+            key={tag}
+            className="bg-zinc-200 dark:bg-zinc-800 text-xs px-2 py-0.5 rounded-full text-zinc-700 dark:text-zinc-300"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+```
+
+## 2
+
+![alt text](image-1.png)
+
+```HTML
+  <div className="min-w-[220px] max-w-[220px] border flex flex-col bg-white dark:bg-zinc-900 rounded-lg shadow-md transition-transform hover:scale-105 cursor-pointer">
+    {/* image of champions */}
+    <img
+      src={champion.defaultSkinImageUrls.splash}
+      alt={champion.name}
+      className="w-full h-full object-cover overflow-hidden rounded-t-lg"
+      loading="lazy"
+    />
+    <div className="font-semibold text-lg text-center flex flex-col items-center p-4 ">
+      {champion.name}
+
+      <div className="text-xs text-zinc-500 text-center mb-1">
+        {champion.title}
+      </div>
+      <div className="flex flex-wrap gap-1 justify-center mt-1">
+        {champion.tags.map((tag) => (
+          <span
+            key={tag}
+            className="bg-zinc-200 dark:bg-zinc-800 text-xs px-2 py-0.5 rounded-full text-zinc-700 dark:text-zinc-300"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+```
+
+# 3
+
+![alt text](image-2.png)
+
+```HTML
+<div className="min-w-[240px] border flex flex-col bg-white dark:bg-zinc-900 rounded-lg shadow-md m-2 transition-transform hover:scale-105 cursor-pointer">
+    {/* image of champions */}
+    <img
+      src={champion.defaultSkinImageUrls.splash}
+      alt={champion.name}
+      className="w-full h-full object-cover overflow-hidden rounded-t-lg"
+      loading="lazy"
+    />
+    <div className="font-semibold text-lg text-center flex flex-col items-center p-4 ">
+      {champion.name}
+
+      <div className="text-xs text-zinc-500 text-center mb-1">
+        {champion.title}
+      </div>
+      <div className="flex flex-wrap gap-1 justify-center mt-1">
+        {champion.tags.map((tag) => (
+          <span
+            key={tag}
+            className="bg-zinc-200 dark:bg-zinc-800 text-xs px-2 py-0.5 rounded-full text-zinc-700 dark:text-zinc-300"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+```
+
+# 4
+
+![](image-3.png)
+
+```HTML
+  <div className="min-w-[240px] max-w-[340px] border flex flex-col bg-white dark:bg-zinc-900 rounded-lg shadow-md m-2 transition-transform hover:scale-105 cursor-pointer">
+    {/* image of champions */}
+    <img
+      src={champion.defaultSkinImageUrls.splash}
+      alt={champion.name}
+      className="w-full h-full object-cover overflow-hidden rounded-t-lg"
+      loading="lazy"
+    />
+    <div className="font-semibold text-lg text-center flex flex-col items-center p-4 ">
+      {champion.name}
+
+      <div className="text-xs text-zinc-500 text-center mb-1">
+        {champion.title}
+      </div>
+      <div className="flex flex-wrap gap-1 justify-center mt-1">
+        {champion.tags.map((tag) => (
+          <span
+            key={tag}
+            className="bg-zinc-200 dark:bg-zinc-800 text-xs px-2 py-0.5 rounded-full text-zinc-700 dark:text-zinc-300"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+```
