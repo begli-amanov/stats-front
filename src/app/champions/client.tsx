@@ -1,15 +1,18 @@
 "use client";
 
+//TODO: Place this component between header and footer and make it scrollable horizontally, like a carousel
+
 import React, { useEffect, useState } from "react";
 import { getChampions } from "@/lib/api";
 import type { Champion } from "@/lib/IChampion";
 
 const ChampionCard: React.FC<{ champion: Champion }> = ({ champion }) => (
+  // Champion card component
   <div className="min-w-[220px] max-w-[220px] border bg-white dark:bg-zinc-900 rounded-lg shadow-md m-2 flex flex-col items-center p-4 transition-transform hover:scale-105 cursor-pointer">
     <img
       src={champion.defaultSkinImageUrls.square}
       alt={champion.name}
-      className="w-20 h-20 rounded-full object-cover mb-2 border border-zinc-200 dark:border-zinc-700"
+      className="w-full h-full rounded-full object-cover overflow-hidden mb-2 border border-zinc-200 dark:border-zinc-700"
       loading="lazy"
     />
     <div className="font-semibold text-lg text-center">{champion.name}</div>
@@ -61,8 +64,10 @@ const ChampionsScroll: React.FC<ChampionsScrollProps> = ({
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
   return (
-    <div className="py-4 px-2">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    // container with champion cards
+    <div className="py-4 my-6">
+      {/* grid of champion cards */}
+      <div className="grid grid-cols-4 gap-4">
         {champions.map((champion) => (
           <ChampionCard key={champion.id} champion={champion} />
         ))}
