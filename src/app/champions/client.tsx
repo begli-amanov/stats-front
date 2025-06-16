@@ -1,30 +1,34 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { getChampions } from "@/lib/api";
 import type { Champion } from "@/lib/IChampion";
 
-const ChampionCard: React.FC<{ champion: Champion }> = ({ champion }) => (
-  // Champion card component
-  <div className="min-w-[240px] max-w-[340px] border flex flex-col bg-card rounded-lg shadow-md m-2 transition-transform hover:scale-105 cursor-pointer">
+// ChampionCard component to display each champion
+const ChampionCard = React.memo<{ champion: Champion }>(({ champion }) => (
+  <div className="min-w-60 max-w-60 border bg-card rounded-lg shadow-md m-2 flex flex-col cursor-pointer">
     {/* image of champions */}
-    <img
-      src={champion.defaultSkinImageUrls.splash}
-      alt={champion.name}
-      className="w-full h-full object-cover overflow-hidden rounded-t-lg"
-      loading="lazy"
-    />
-    <div className="font-semibold text-lg text-center flex flex-col items-center p-4 ">
+    {/* if we remove overflow-hidden, the image will not be cropped and the default black thick border will be visible */}
+    <div className="overflow-hidden rounded-t-lg">
+      <img
+        src={champion.defaultSkinImageUrls.square}
+        alt={`${champion.name} - ${champion.title}`}
+        className="w-full h-full object-cover scale-115 transition-transform hover:scale-125 duration-300 "
+      />
+    </div>
+    {/* Name */}
+    <div className="font-semibold text-lg flex flex-col items-center gap-1 pt-2 pb-4">
       {champion.name}
 
-      <div className="text-xs text-muted-foreground text-center mb-1">
-        {champion.title}
-      </div>
-      <div className="flex flex-wrap gap-1 justify-center mt-1">
+      {/* Title*/}
+      <div className="text-xs text-muted-foreground mb-2">{champion.title}</div>
+
+      {/* Tags */}
+      <div className="flex gap-1 justify-center">
         {champion.tags.map((tag) => (
           <span
             key={tag}
-            className="bg-secondary text-xs px-2 py-0.5 rounded-full text-foreground"
+            className="bg-input text-xs text-accent-foreground px-2 py-0.5 rounded-full"
           >
             {tag}
           </span>
@@ -32,6 +36,15 @@ const ChampionCard: React.FC<{ champion: Champion }> = ({ champion }) => (
       </div>
     </div>
   </div>
+));
+
+ChampionCard.displayName = "ChampionCard";
+
+const LoadingState = () => (
+  <div className="p-8 text-center">Loading champions...</div>
+);
+const ErrorState = ({ error }: { error: string }) => (
+  <div className="p-8 text-center text-destructive">{error}</div>
 );
 
 interface ChampionsScrollProps {
@@ -47,41 +60,41 @@ const ChampionsScroll: React.FC<ChampionsScrollProps> = ({
   const [loading, setLoading] = useState(!initialChampions);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadChampions = useCallback(async () => {
     if (initialChampions) return;
-    getChampions()
-      .then((data) => {
-        setChampions(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message || "Failed to load champions");
-        setLoading(false);
-      });
+
+    try {
+      const data = await getChampions();
+      setChampions(data);
+      setLoading(false);
+    } catch (err) {
+      setError((err as Error)?.message || "Failed to load champions");
+      setLoading(false);
+    }
   }, [initialChampions]);
 
-  if (loading)
-    return <div className="p-8 text-center">Loading champions...</div>;
-  if (error)
-    return <div className="p-8 text-center text-destructive">{error}</div>;
+  useEffect(() => {
+    let mounted = true;
+
+    loadChampions().catch(() => {
+      if (mounted) {
+        setError("Failed to load champions");
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [loadChampions]);
+
+  if (loading) return <LoadingState />;
+  if (error) return <ErrorState error={error} />;
 
   return (
-    <div className="py-4 my-6">
-      {/* Fixed height container with vertical scroll - hidden scrollbar */}
-      <div
-        // overflowY="auto" is need here to hide other cards. otherwise it will show all cards
-        className="h-[63.6rem] overflow-y-auto rounded-lg p-4 scrollbar-hide"
-        style={{
-          scrollbarWidth: "none" /* Firefox */,
-          msOverflowStyle: "none" /* IE and Edge */,
-        }}
-      >
-        <style jsx>{`
-          .scrollbar-hide::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
-          }
-        `}</style>
-        {/* Grid of champion cards - 4 columns, shows ~16 cards (4 rows) at once */}
+    // Champions container
+    <div className="py-2">
+      <div className="h-[70.5rem] overflow-y-auto rounded-lg p-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <div className="grid grid-cols-4 gap-4">
           {champions.map((champion) => (
             <ChampionCard key={champion.id} champion={champion} />
@@ -89,7 +102,6 @@ const ChampionsScroll: React.FC<ChampionsScrollProps> = ({
         </div>
       </div>
 
-      {/* Optional: Show total count */}
       <div className="text-center text-sm text-muted-foreground mt-2">
         {champions.length} champions total
       </div>
