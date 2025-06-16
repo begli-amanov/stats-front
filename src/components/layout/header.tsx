@@ -8,8 +8,8 @@ export default function Header() {
         Home
       </Link>
       <Toolbar />
-      <Link className="font-bold" href={"/"}>
-        Home
+      <Link className="font-bold" href={"/champions"}>
+        Champions
       </Link>
     </header>
   );
