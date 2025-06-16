@@ -93,7 +93,7 @@ const ChampionsScroll: React.FC<ChampionsScrollProps> = ({
 
   return (
     // Champions container
-    <div className="py-2">
+    <>
       <div className="h-[70.5rem] overflow-y-auto rounded-lg p-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <div className="grid grid-cols-4 gap-4">
           {champions.map((champion) => (
@@ -105,7 +105,7 @@ const ChampionsScroll: React.FC<ChampionsScrollProps> = ({
       <div className="text-center text-sm text-muted-foreground mt-2">
         {champions.length} champions total
       </div>
-    </div>
+    </>
   );
 };
 
