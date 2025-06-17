@@ -1,5 +1,7 @@
 import { getChampionAbilities } from "@/lib/api";
 import Image from "next/image";
+import type { PassiveAbility } from "@/lib/IPassive";
+import type { Spell } from "@/lib/ISpell";
 
 export default async function ChampionPage(props: {
   params: Promise<{ id: string }> | { id: string };
@@ -7,7 +9,7 @@ export default async function ChampionPage(props: {
   const { id } = await props.params;
   const champion = await getChampionAbilities(id);
 
-  // Placeholder items (replace with real data/fetch as needed)
+  // Placeholder items and runes (replace with real data/fetch as needed)
   const items = [
     {
       id: 1,
@@ -25,48 +27,182 @@ export default async function ChampionPage(props: {
       description:
         "+40 Attack Damage, +30% Attack Speed, +20% Crit Chance. Unique Passive: Every third attack deals bonus true damage.",
     },
-    // ...add more items as needed
+  ];
+  const runes = [
+    {
+      id: 1,
+      name: "Conqueror",
+      imageUrl:
+        "https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Precision/Conqueror/Conqueror.png",
+      description: "Gain stacks for bonus AD/AP on hit.",
+    },
+    {
+      id: 2,
+      name: "Legend: Alacrity",
+      imageUrl:
+        "https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png",
+      description: "+Attack Speed for each takedown.",
+    },
   ];
 
+  // Ability tabs: Passive, Q, W, E, R
+  const abilities: (
+    | ({ key: "Passive"; type: "passive" } & PassiveAbility)
+    | ({ key: string; type: "spell" } & Spell)
+  )[] = [
+    { key: "Passive", type: "passive", ...champion.passive },
+    ...champion.spells.map((spell, i) => ({
+      ...spell,
+      key: String.fromCharCode(81 + i),
+      type: "spell" as const,
+    })),
+  ];
+
+  // Simple tab state (for client component, would use useState)
+  // For SSR, default to first tab
+  const selectedTab = 0;
+
+  // Type guards
+  function isPassive(
+    ability: any
+  ): ability is { key: "Passive"; type: "passive" } & PassiveAbility {
+    return ability.type === "passive";
+  }
+  function isSpell(
+    ability: any
+  ): ability is { key: string; type: "spell" } & Spell {
+    return ability.type === "spell";
+  }
+
   return (
-    <div className="container mx-auto py-6 px-2">
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* Left column: Champion info and items */}
-        <div className="flex flex-col items-center md:w-1/3 gap-4">
-          <div className="relative w-36 h-36 rounded-lg overflow-hidden border">
-            <Image
-              src={champion.defaultSkinImageUrls.square}
-              alt={champion.name}
-              fill
-              className="object-cover"
-            />
+    <div className="container mx-auto py-6 px-2 max-w-5xl">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row items-center gap-6 mb-6 bg-card rounded-lg p-4 shadow">
+        <div className="relative w-32 h-32 rounded-lg overflow-hidden border">
+          <Image
+            src={champion.defaultSkinImageUrls.square}
+            alt={champion.name}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold mb-1">{champion.name}</h1>
+          <p className="text-base text-muted-foreground mb-2">
+            {champion.title}
+          </p>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {champion.tags.map((tag) => (
+              <span
+                key={tag}
+                className="bg-input text-xs text-accent-foreground px-2 py-0.5 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-1">{champion.name}</h1>
-            <p className="text-base text-muted-foreground mb-2">
-              {champion.title}
-            </p>
-            <div className="flex flex-wrap gap-1 justify-center mb-2">
-              {champion.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-input text-xs text-accent-foreground px-2 py-0.5 rounded-full"
+          {/* Quick stats (placeholder) */}
+          <div className="flex gap-4 text-xs text-muted-foreground">
+            <span>Attack: {champion.info?.attack ?? "-"}</span>
+            <span>Defense: {champion.info?.defense ?? "-"}</span>
+            <span>Magic: {champion.info?.magic ?? "-"}</span>
+            <span>Difficulty: {champion.info?.difficulty ?? "-"}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content: Two Columns */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left: Abilities (Passive + Spells) and Runes */}
+        <div className="flex-1 flex flex-col gap-6">
+          {/* Abilities Section */}
+          <div className="bg-card rounded-lg p-4 shadow">
+            <h3 className="font-semibold mb-4">Abilities</h3>
+            {/* Passive */}
+            <div className="flex gap-4 items-start mb-6">
+              <div className="relative rounded overflow-hidden">
+                <Image
+                  src={champion.passive.imageUrl}
+                  alt={champion.passive.name}
+                  width={64}
+                  height={64}
+                  className="object-cover"
+                />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold mb-1">
+                  Passive: {champion.passive.name}
+                </h2>
+                <p className="text-sm mb-2">{champion.passive.description}</p>
+              </div>
+            </div>
+            {/* Spells Q/W/E/R */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {champion.spells.map((spell, i) => (
+                <div
+                  key={spell.id}
+                  className="flex gap-4 items-start bg-muted rounded p-3 group relative"
                 >
-                  {tag}
-                </span>
+                  <div className="relative rounded overflow-hidden">
+                    <Image
+                      src={spell.imageUrl}
+                      alt={spell.name}
+                      width={64}
+                      height={64}
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <h3 className="font-bold text-base mb-1">
+                      {String.fromCharCode(81 + i)}: {spell.name}
+                    </h3>
+                  </div>
+                  {/* Tooltip on hover */}
+                  <div className="hidden group-hover:flex flex-col absolute left-20 top-0 z-10 bg-card border rounded p-3 w-64 shadow-lg">
+                    <span className="font-bold mb-1">{spell.name}</span>
+                    <span className="mb-1">{spell.tooltip}</span>
+                    {spell.cooldown && (
+                      <span className="text-muted-foreground">
+                        Cooldown: {spell.cooldown.join("/")}s
+                      </span>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
-          {/* Items Section */}
-          <div className="w-full bg-card rounded-lg p-3 mt-2">
-            <h2 className="text-lg font-semibold mb-2 text-center">
-              Popular Items
-            </h2>
-            <div className="flex flex-wrap justify-center gap-2">
+          {/* Runes Panel */}
+          <div className="bg-card rounded-lg p-4 shadow">
+            <h3 className="font-semibold mb-2">Popular Runes</h3>
+            <div className="flex gap-4 flex-wrap">
+              {runes.map((rune) => (
+                <div key={rune.id} className="flex flex-col items-center w-16">
+                  <div className="w-10 h-10 relative rounded border overflow-hidden mb-1">
+                    <Image
+                      src={rune.imageUrl}
+                      alt={rune.name}
+                      width={40}
+                      height={40}
+                      className="object-cover"
+                    />
+                  </div>
+                  <span className="text-xs text-center" title={rune.name}>
+                    {rune.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* Right: Items */}
+        <div className="md:w-1/3 w-full flex flex-col gap-6">
+          <div className="bg-card rounded-lg p-4 shadow">
+            <h3 className="font-semibold mb-2">Popular Items</h3>
+            <div className="flex flex-wrap gap-3">
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col items-center group w-14 relative"
+                  className="flex flex-col items-center w-16 group relative"
                 >
                   <div className="w-12 h-12 relative rounded border overflow-hidden">
                     <Image
@@ -78,82 +214,19 @@ export default async function ChampionPage(props: {
                     />
                   </div>
                   <span
-                    className="text-xs mt-1 text-center truncate w-full"
+                    className="text-xs my-1 text-center truncate w-full"
                     title={item.name}
                   >
                     {item.name}
                   </span>
                   {/* Tooltip on hover */}
-                  <div className="hidden group-hover:block absolute z-10 bg-card border rounded p-2 text-xs w-48 left-1/2 -translate-x-1/2 mt-2 shadow-lg">
-                    <strong>{item.name}</strong>
+                  <div className="hidden group-hover:flex flex-col absolute bottom-20 z-10 bg-card border rounded p-3 w-64 shadow-lg">
+                    <strong className="mb-2">{item.name}</strong>
                     <div>{item.description}</div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* Right column: Abilities */}
-        <div className="flex-1">
-          <h2 className="text-xl font-semibold mb-3">Abilities</h2>
-          <div className="flex flex-row flex-wrap gap-4 justify-start">
-            {/* Passive */}
-            <div className="flex flex-col items-center bg-card rounded-lg p-3 w-32">
-              <div className="w-12 h-12 relative rounded overflow-hidden mb-1">
-                <Image
-                  src={champion.passive.imageUrl}
-                  alt={champion.passive.name}
-                  width={48}
-                  height={48}
-                  className="object-cover"
-                />
-              </div>
-              <span className="font-bold text-xs mb-1">Passive</span>
-              <span className="text-xs font-semibold mb-1 text-center">
-                {champion.passive.name}
-              </span>
-              <span
-                className="text-xs text-muted-foreground text-center line-clamp-3"
-                title={champion.passive.description}
-              >
-                {champion.passive.description}
-              </span>
-            </div>
-            {/* Spells Q/W/E/R */}
-            {champion.spells.map((spell, idx) => (
-              <div
-                key={spell.id}
-                className="flex flex-col items-center bg-card rounded-lg p-3 w-32"
-              >
-                <div className="w-12 h-12 relative rounded overflow-hidden mb-1">
-                  <Image
-                    src={spell.imageUrl}
-                    alt={spell.name}
-                    width={48}
-                    height={48}
-                    className="object-cover"
-                  />
-                </div>
-                <span className="font-bold text-xs mb-1">
-                  {String.fromCharCode(81 + idx)}
-                </span>
-                <span className="text-xs font-semibold mb-1 text-center">
-                  {spell.name}
-                </span>
-                <span
-                  className="text-xs text-muted-foreground text-center line-clamp-3"
-                  title={spell.tooltip}
-                >
-                  {spell.tooltip}
-                </span>
-                {spell.cooldown && (
-                  <span className="text-[10px] text-muted-foreground mt-1">
-                    CD: {spell.cooldown.join("/")}s
-                  </span>
-                )}
-              </div>
-            ))}
           </div>
         </div>
       </div>
