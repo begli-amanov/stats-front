@@ -45,38 +45,85 @@ export default async function ChampionPage(props: {
 
   return (
     <div className="flex-1 mx-auto px-2 py-6 max-w-5xl">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row gap-6 mb-6 bg-card rounded-lg p-4 shadow">
-        <div className="relative w-32 h-32 rounded-lg overflow-hidden border">
-          <Image
-            src={champion.defaultSkinImageUrls.square}
-            alt={champion.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-2">{champion.name}</h1>
-          <p className="text-muted-foreground mb-2">{champion.title}</p>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {champion.tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-input text-xs text-accent-foreground px-2 py-0.5 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
+      {/* Header Section */}{" "}
+      <div className="flex flex-col gap-6 mb-6 bg-card rounded-lg p-4 shadow">
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="relative w-32 h-32 rounded-lg overflow-hidden border">
+            <Image
+              src={champion.defaultSkinImageUrls.square}
+              alt={champion.name}
+              fill
+              className="object-cover"
+            />
           </div>
-          <div className="flex gap-4 text-xs text-muted-foreground">
-            <span>Attack: {champion.info?.attack ?? "-"}</span>
-            <span>Defense: {champion.info?.defense ?? "-"}</span>
-            <span>Magic: {champion.info?.magic ?? "-"}</span>
-            <span>Difficulty: {champion.info?.difficulty ?? "-"}</span>
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold mb-2">{champion.name}</h1>
+            <p className="text-muted-foreground mb-2">{champion.title}</p>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {champion.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="bg-input text-xs text-accent-foreground px-2 py-0.5 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-4 text-xs text-muted-foreground">
+              <span>Attack: {champion.info?.attack ?? "-"}</span>
+              <span>Defense: {champion.info?.defense ?? "-"}</span>
+              <span>Magic: {champion.info?.magic ?? "-"}</span>
+              <span>Difficulty: {champion.info?.difficulty ?? "-"}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Abilities */}
+        <div className="border-t pt-4">
+          <div className="flex items-center gap-4 mb-4">
+            {/* Passive */}
+            <div className="flex gap-3 group relative">
+              <div className="w-12 h-12 relative rounded overflow-hidden">
+                <Image
+                  src={champion.passive.imageUrl}
+                  alt={champion.passive.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="hidden group-hover:flex flex-col absolute left-0 top-14 z-10 bg-card border rounded p-3 w-64 shadow-lg">
+                <span className="font-bold mb-1">{champion.passive.name}</span>
+                <span className="text-sm">{champion.passive.description}</span>
+              </div>
+            </div>
+            {/* Spells Q/W/E/R */}
+            {champion.spells.map((spell, i) => (
+              <div key={spell.id} className="group relative">
+                <div className="w-12 h-12 relative rounded overflow-hidden">
+                  <div className="absolute top-0 left-0 bg-black/50 text-white text-xs px-1">
+                    {["Q", "W", "E", "R"][i]}
+                  </div>
+                  <Image
+                    src={spell.imageUrl}
+                    alt={spell.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="hidden group-hover:flex flex-col absolute left-0 top-14 z-10 bg-card border rounded p-3 w-64 shadow-lg">
+                  <span className="font-bold mb-1">{spell.name}</span>
+                  <span className="text-sm mb-2">{spell.tooltip}</span>
+                  {spell.cooldown && (
+                    <span className="text-xs text-muted-foreground">
+                      Cooldown: {spell.cooldown.join("/")}s
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-
       {/* Main Content: Two Columns */}
       <div className="flex flex-col md:flex-row gap-6">
         {/* Left: Abilities and Runes */}
