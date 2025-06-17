@@ -1,7 +1,5 @@
 import { getChampionAbilities } from "@/lib/api";
 import Image from "next/image";
-import type { PassiveAbility } from "@/lib/IPassive";
-import type { Spell } from "@/lib/ISpell";
 
 export default async function ChampionPage(props: {
   params: Promise<{ id: string }> | { id: string };
@@ -44,35 +42,6 @@ export default async function ChampionPage(props: {
       description: "+Attack Speed for each takedown.",
     },
   ];
-
-  // Ability tabs: Passive, Q, W, E, R
-  const abilities: (
-    | ({ key: "Passive"; type: "passive" } & PassiveAbility)
-    | ({ key: string; type: "spell" } & Spell)
-  )[] = [
-    { key: "Passive", type: "passive", ...champion.passive },
-    ...champion.spells.map((spell, i) => ({
-      ...spell,
-      key: String.fromCharCode(81 + i),
-      type: "spell" as const,
-    })),
-  ];
-
-  // Simple tab state (for client component, would use useState)
-  // For SSR, default to first tab
-  const selectedTab = 0;
-
-  // Type guards
-  function isPassive(
-    ability: any
-  ): ability is { key: "Passive"; type: "passive" } & PassiveAbility {
-    return ability.type === "passive";
-  }
-  function isSpell(
-    ability: any
-  ): ability is { key: string; type: "spell" } & Spell {
-    return ability.type === "spell";
-  }
 
   return (
     <div className="container mx-auto py-6 px-2 max-w-5xl">
