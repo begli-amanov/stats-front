@@ -116,7 +116,7 @@ export default async function ChampionPage(props: {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-bold">
-                        {String.fromCharCode(81 + i)}: {spell.name}
+                        {["Q", "W", "E", "R"][i]}: {spell.name}
                       </h3>
                     </div>
                     {/* Tooltip */}
